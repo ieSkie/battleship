@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useEffect } from "react";
 import Board from "./components/Board";
 import "./index.css";
 
@@ -41,6 +42,13 @@ function App() {
   );
   const [log, setLog] = useState([]);
   const [gameOver, setGameOver] = useState(false);
+  const [serverTime, setServerTime] = useState(null);
+
+  useEffect(() => {
+    fetch("http://localhost:3001/api/time")
+      .then((res) => res.json())
+      .then((data) => setServerTime(data.time));
+  }, []);
 
   function addLog(text, type) {
     setLog((prev) => [{ text, type }, ...prev]);
@@ -118,6 +126,9 @@ function App() {
   return (
     <div>
       <h1>Морской бой</h1>
+      {serverTime && (
+        <p>Время сервера: {new Date(serverTime).toLocaleTimeString()}</p>
+      )}
       <div className="game">
         <div>
           <h2>Твоё поле</h2>
