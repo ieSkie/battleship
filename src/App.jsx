@@ -45,9 +45,16 @@ function App() {
   const [serverTime, setServerTime] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:3001/api/time")
-      .then((res) => res.json())
-      .then((data) => setServerTime(data.time));
+    const fetchTime = () => {
+      fetch("http://localhost:3001/api/time")
+        .then((res) => res.json())
+        .then((data) => setServerTime(data.time));
+    };
+
+    fetchTime();
+    const interval = setInterval(fetchTime, 1000);
+
+    return () => clearInterval(interval);
   }, []);
 
   function addLog(text, type) {
